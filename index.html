@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pusat Nilai Informatika | SMP IT Insan Mulia</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Exo+2:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  --bg:#060a18; --bg2:#0b1230; --panel:rgba(18,28,64,.58); --panel-solid:#0e1738;
+  --line:rgba(120,170,255,.2); --text:#e8efff; --mute:#8fa3d1;
+  --cyan:#35e0ff; --violet:#8b5cff; --pink:#ff4fd8; --ok:#3dffa8; --bad:#ff5470; --warn:#ffc857;
+  --display:'Orbitron','Segoe UI',system-ui,sans-serif;
+  --body:'Exo 2','Segoe UI',system-ui,-apple-system,sans-serif;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.5;
+  background-image:radial-gradient(1000px 600px at 85% -10%,rgba(139,92,255,.28),transparent 60%),radial-gradient(900px 600px at -10% 20%,rgba(53,224,255,.16),transparent 60%);
+  background-attachment:fixed;overflow-x:hidden}
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.floor{position:fixed;left:-20%;right:-20%;bottom:-8vh;height:46vh;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(53,224,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(53,224,255,.22) 1px,transparent 1px);
+  background-size:56px 56px;transform:perspective(380px) rotateX(62deg);transform-origin:center bottom;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,transparent 85%);mask-image:linear-gradient(to top,#000 0%,transparent 85%);opacity:.55}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+
+/* ===== layout ===== */
+.app{position:relative;z-index:1;display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.side{position:sticky;top:0;height:100vh;padding:26px 18px;display:flex;flex-direction:column;gap:26px;
+  background:linear-gradient(180deg,rgba(10,16,40,.85),rgba(8,12,30,.7));border-right:1px solid var(--line);backdrop-filter:blur(10px)}
+.brand{display:flex;gap:14px;align-items:center}
+.cubewrap{width:44px;height:44px;perspective:240px;display:grid;place-items:center;flex:none}
+.cube{width:28px;height:28px;position:relative;transform-style:preserve-3d;animation:spin 10s linear infinite}
+.cube i{position:absolute;inset:0;border:1.5px solid var(--cyan);background:rgba(53,224,255,.1);box-shadow:inset 0 0 10px rgba(53,224,255,.45),0 0 8px rgba(53,224,255,.3)}
+.cube i:nth-child(1){transform:translateZ(14px)}
+.cube i:nth-child(2){transform:rotateY(180deg) translateZ(14px)}
+.cube i:nth-child(3){transform:rotateY(90deg) translateZ(14px);border-color:var(--violet)}
+.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(14px);border-color:var(--violet)}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(14px);border-color:var(--pink)}
+.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(14px);border-color:var(--pink)}
+@keyframes spin{from{transform:rotateX(-28deg) rotateY(0)}to{transform:rotateX(-28deg) rotateY(360deg)}}
+.brand h1{font:700 15px/1.2 var(--display);margin:0;letter-spacing:.04em}
+.brand p{margin:3px 0 0;font-size:12.5px;color:var(--mute)}
+.nav{display:flex;flex-direction:column;gap:6px}
+.nav a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;color:var(--mute);font-weight:600;border:1px solid transparent;transition:.2s}
+.nav a b{font-size:18px;width:22px;text-align:center;font-weight:400}
+.nav a:hover{color:var(--text);background:rgba(120,170,255,.08)}
+.nav a.on{color:#fff;background:linear-gradient(90deg,rgba(53,224,255,.2),rgba(139,92,255,.16));border-color:rgba(53,224,255,.4);box-shadow:0 0 22px rgba(53,224,255,.14)}
+.side .foot{margin-top:auto;font-size:12.5px;color:var(--mute);border-top:1px solid var(--line);padding-top:14px}
+.main{padding:30px clamp(16px,3vw,40px) 60px;min-width:0}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.pagehead h2{font:700 clamp(22px,3vw,30px)/1.15 var(--display);margin:0;letter-spacing:.02em;text-shadow:0 0 24px rgba(53,224,255,.35)}
+.pagehead p{margin:6px 0 0;color:var(--mute)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* ===== panels ===== */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(12px);
+  box-shadow:0 18px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)}
+.panel h3{font:700 14px/1.3 var(--display);margin:0 0 4px;letter-spacing:.04em}
+.panel .sub{margin:0 0 16px;color:var(--mute);font-size:13.5px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.stack{display:grid;gap:18px}
+.tilt{transform-style:preserve-3d;transition:transform .15s ease-out,box-shadow .2s}
+.tilt.hot{box-shadow:0 26px 50px rgba(0,0,0,.5),0 0 28px rgba(53,224,255,.15),inset 0 1px 0 rgba(255,255,255,.08)}
+
+/* stat cards */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-bottom:18px;perspective:1200px}
+.stat{padding:18px 20px;border-radius:18px;border:1px solid var(--line);position:relative;overflow:hidden;
+  background:linear-gradient(145deg,rgba(26,40,92,.7),rgba(14,22,54,.6))}
+.stat::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,var(--c,var(--cyan)),transparent 70%);opacity:.28}
+.stat span{font-size:13px;color:var(--mute)}
+.stat strong{display:block;font:900 clamp(28px,3.4vw,40px)/1.1 var(--display);margin-top:6px;color:var(--c,var(--cyan));text-shadow:0 0 20px var(--c,var(--cyan));transform:translateZ(30px)}
+.stat small{display:block;margin-top:4px;color:var(--mute);font-size:12.5px}
+
+/* buttons & form */
+.btn{border:1px solid var(--line);background:rgba(120,170,255,.08);padding:10px 16px;border-radius:12px;cursor:pointer;font-weight:600;transition:.18s;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{background:rgba(120,170,255,.18);transform:translateY(-1px)}
+.btn.pri{background:linear-gradient(135deg,var(--cyan),var(--violet));color:#04101f;border-color:transparent;box-shadow:0 8px 24px rgba(53,224,255,.3)}
+.btn.pri:hover{filter:brightness(1.1)}
+.btn.dan{border-color:rgba(255,84,112,.5);color:#ff9aa9}
+.btn.dan:hover{background:rgba(255,84,112,.16)}
+.btn.sm{padding:6px 10px;font-size:13px;border-radius:9px}
+.btn.on{background:rgba(53,224,255,.2);border-color:var(--cyan);color:#fff}
+.in,select.in,textarea.in{width:100%;background:rgba(6,10,28,.7);border:1px solid var(--line);border-radius:10px;padding:10px 12px;outline:none;transition:.15s}
+.in:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(53,224,255,.15)}
+select.in{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
+select option{background:#0e1738}
+label.f{display:grid;gap:6px;font-size:13px;color:var(--mute);font-weight:600}
+.fgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.fgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grp{margin:20px 0 10px;font:700 12px var(--display);color:var(--cyan);letter-spacing:.06em}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-size:12.5px;font-weight:700;border:1px solid;white-space:nowrap}
+.badge b{font-size:12px}
+.badge.ok{color:var(--ok);border-color:rgba(61,255,168,.45);background:rgba(61,255,168,.1)}
+.badge.watch{color:var(--warn);border-color:rgba(255,200,87,.5);background:rgba(255,200,87,.1)}
+.badge.bad{color:var(--bad);border-color:rgba(255,84,112,.55);background:rgba(255,84,112,.12)}
+.badge.empty{color:var(--mute);border-color:var(--line)}
+.chip{display:inline-block;padding:2px 8px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(255,84,112,.14);color:#ff9aa9;border:1px solid rgba(255,84,112,.35);margin:2px 4px 2px 0}
+
+/* table */
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
+.tools .in{width:auto;min-width:150px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:rgba(8,13,34,.7)}
+table.grid{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px}
+table.grid th,table.grid td{padding:10px 10px;border-bottom:1px solid rgba(120,170,255,.09);text-align:center;white-space:nowrap}
+table.grid thead th{background:#0c1534;font:700 12px var(--display);color:var(--cyan);letter-spacing:.04em;position:sticky;top:0}
+table.grid thead tr:nth-child(2) th{color:var(--mute)}
+table.grid th.l,table.grid td.l{text-align:left}
+table.grid .sticky{position:sticky;left:0;z-index:2;background:#0c1432;box-shadow:6px 0 12px rgba(0,0,0,.25)}
+table.grid tbody tr:hover td{background:rgba(53,224,255,.05)}
+table.grid tbody tr:hover td.sticky{background:#10204a}
+.namelink{font-weight:700;border-bottom:1px dashed rgba(53,224,255,.5)}
+.namelink:hover{color:var(--cyan)}
+td.num.low{color:var(--bad);font-weight:700;background:rgba(255,84,112,.09)}
+td.num.low sup{font-size:9px;margin-left:2px}
+td.num.empty{color:var(--mute)}
+td.strong{font-weight:700;background:rgba(139,92,255,.07)}
+td.fin{font:700 14px var(--display)}
+td.fin.low{color:var(--bad)}
+td.fin.good{color:var(--ok)}
+td input.cellin{width:62px;text-align:center;background:rgba(6,10,28,.9);border:1px solid var(--line);border-radius:8px;padding:6px 4px;outline:none}
+td input.cellin:focus{border-color:var(--cyan)}
+td input.cellin.low{border-color:rgba(255,84,112,.6);color:var(--bad)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;color:var(--mute);font-size:13px}
+
+/* charts */
+.chart svg{width:100%;height:auto;display:block;overflow:visible}
+.lg{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:13px;color:var(--mute)}
+.lg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.bplot{--bh:210px;position:relative;height:var(--bh);display:flex;align-items:flex-end;justify-content:space-around;gap:10px;border-bottom:1px solid var(--line);margin:34px 6px 60px;perspective:700px}
+.bcol{position:relative;flex:1;max-width:96px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}
+.bval{font:700 13px var(--display);margin-bottom:12px;color:var(--cyan)}
+.bar{position:relative;width:46px;height:calc(var(--bh) * var(--h) / 100);background:linear-gradient(180deg,#35e0ff,#2a7bff);box-shadow:0 0 22px rgba(53,224,255,.35);animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.bar::before{content:"";position:absolute;left:0;top:-12px;width:100%;height:12px;background:#9af1ff;transform:skewX(-45deg);transform-origin:bottom left}
+.bar::after{content:"";position:absolute;left:100%;top:0;width:12px;height:100%;background:#1a4fc0;transform:skewY(-45deg);transform-origin:top left}
+.bar.low{background:linear-gradient(180deg,#ff6d86,#c42a4a);box-shadow:0 0 22px rgba(255,84,112,.35)}
+.bar.low::before{background:#ffb1bf}.bar.low::after{background:#8c1c35}
+@keyframes grow{from{height:0}}
+.blabel{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);text-align:center;font-weight:700;white-space:nowrap}
+.blabel small{display:block;font-weight:500;color:var(--mute);font-size:11.5px}
+.kkmline{position:absolute;left:-6px;right:-6px;bottom:calc(var(--bh) * var(--k) / 100);border-top:1.5px dashed var(--warn);z-index:3;pointer-events:none}
+.kkmline span{position:absolute;right:0;top:-22px;font-size:12px;color:var(--warn);font-weight:700}
+.hrow{display:grid;grid-template-columns:54px 1fr 48px;align-items:center;gap:10px;margin:9px 0;font-size:13.5px}
+.hbar{position:relative;height:10px;border-radius:99px;background:rgba(120,170,255,.12)}
+.hbar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--violet));box-shadow:0 0 12px rgba(53,224,255,.4)}
+.hbar i.low{background:linear-gradient(90deg,#ff6d86,#ff4fd8)}
+.hbar::after{content:"";position:absolute;left:var(--k);top:-4px;bottom:-4px;border-left:1.5px dashed var(--warn)}
+
+/* lists */
+.rank{display:grid;gap:10px}
+.ri{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:12px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:rgba(8,13,34,.55);transition:.2s}
+.ri:hover{border-color:rgba(53,224,255,.5);transform:translateX(3px)}
+.ri .no{font:900 18px var(--display);color:var(--mute);text-align:center}
+.ri:nth-child(1) .no{color:#ffd86b;text-shadow:0 0 14px #ffd86b}
+.ri:nth-child(2) .no{color:#d8e3ff;text-shadow:0 0 12px #aab9e8}
+.ri:nth-child(3) .no{color:#ffa56b;text-shadow:0 0 12px #ff8c42}
+.ri b{display:block}
+.ri small{color:var(--mute)}
+.ri .sc{font:700 18px var(--display);color:var(--cyan)}
+.ri.alert .sc{color:var(--bad)}
+.ri.alert .no{color:var(--bad);font-size:20px}
+.empty-state{text-align:center;padding:50px 20px;color:var(--mute)}
+.empty-state h3{font:700 18px var(--display);color:var(--text);margin-bottom:8px}
+.banner{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:12px 16px;margin-bottom:18px;border-radius:14px;border:1px solid rgba(255,200,87,.5);background:rgba(255,200,87,.08);color:#ffe3a1}
+
+/* profile */
+.phero{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center}
+.orb{width:130px;height:130px;position:relative;perspective:500px;display:grid;place-items:center}
+.orb .core{font:900 44px var(--display);color:#fff;text-shadow:0 0 24px var(--cyan);z-index:2}
+.orb .ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--cyan);box-shadow:0 0 18px rgba(53,224,255,.5),inset 0 0 18px rgba(53,224,255,.25);animation:ring1 7s linear infinite}
+.orb .ring.b{border-color:var(--violet);box-shadow:0 0 18px rgba(139,92,255,.5);animation:ring2 9s linear infinite}
+.orb .ring.c{border-color:var(--pink);inset:14px;box-shadow:0 0 18px rgba(255,79,216,.45);animation:ring3 11s linear infinite}
+@keyframes ring1{from{transform:rotateX(70deg) rotateZ(0)}to{transform:rotateX(70deg) rotateZ(360deg)}}
+@keyframes ring2{from{transform:rotateY(70deg) rotateZ(0)}to{transform:rotateY(70deg) rotateZ(-360deg)}}
+@keyframes ring3{from{transform:rotateX(35deg) rotateY(35deg) rotateZ(0)}to{transform:rotateX(35deg) rotateY(35deg) rotateZ(360deg)}}
+.phero h2{font:700 clamp(22px,3vw,30px)/1.2 var(--display);margin:0 0 8px}
+.meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--mute)}
+.bigfin{text-align:center;padding:10px 22px;border-left:1px solid var(--line)}
+.bigfin strong{display:block;font:900 52px/1 var(--display);text-shadow:0 0 28px currentColor}
+.bigfin span{color:var(--mute);font-size:13px}
+.scgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;perspective:1000px}
+.sc3{padding:14px;border-radius:16px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(26,40,92,.6),rgba(12,18,46,.7))}
+.sc3 span{font:700 12px var(--display);color:var(--mute)}
+.sc3 strong{display:block;font:900 26px var(--display);margin:4px 0 8px;transform:translateZ(20px)}
+.sc3.low{border-color:rgba(255,84,112,.55);background:linear-gradient(145deg,rgba(90,20,40,.5),rgba(12,18,46,.7))}
+.sc3.low strong{color:var(--bad)}
+.sc3.sp{border-color:rgba(139,92,255,.5)}
+.note{margin-top:14px;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:rgba(8,13,34,.55)}
+.note.warn{border-color:rgba(255,84,112,.5);background:rgba(255,84,112,.08)}
+.note.good{border-color:rgba(61,255,168,.45);background:rgba(61,255,168,.07)}
+
+/* modal & toast */
+#modal{position:fixed;inset:0;z-index:50;display:grid;place-items:center;background:rgba(2,4,14,.7);backdrop-filter:blur(4px);padding:20px}
+#modal[hidden]{display:none}
+#modal .box{max-width:420px;width:100%;padding:24px;border-radius:18px;background:var(--panel-solid);border:1px solid var(--line);box-shadow:0 30px 70px rgba(0,0,0,.6)}
+#modal p{margin:0 0 20px}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;z-index:60;padding:12px 20px;border-radius:12px;background:#0e1d44;border:1px solid var(--cyan);box-shadow:0 0 24px rgba(53,224,255,.3);transition:.3s;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.help{font-size:13px;color:var(--mute);margin:4px 0 0}
+.preview{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:16px;padding:12px 16px;border-radius:12px;border:1px dashed var(--line)}
+.preview b{font-family:var(--display)}
+
+/* ===== responsive ===== */
+@media (max-width:1100px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2{grid-template-columns:1fr}.scgrid{grid-template-columns:repeat(3,minmax(0,1fr))}.fgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;z-index:20;top:auto;bottom:0;left:0;right:0;height:auto;flex-direction:row;padding:6px 8px calc(6px + env(safe-area-inset-bottom,0px));border-right:0;border-top:1px solid var(--line);gap:0}
+  .side .brand,.side .foot{display:none}
+  .nav{flex-direction:row;width:100%;justify-content:space-around}
+  .nav a{flex-direction:column;gap:2px;padding:6px 10px;font-size:11.5px}
+  .main{padding-bottom:110px}
+  .phero{grid-template-columns:1fr;justify-items:center;text-align:center}
+  .bigfin{border-left:0;border-top:1px solid var(--line);padding-top:16px}
+  .meta{justify-content:center}
+}
+@media (max-width:560px){.stats{grid-template-columns:1fr 1fr;gap:12px}.stat{padding:14px}.scgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.fgrid,.fgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.bar{width:32px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="space" aria-hidden="true"></canvas>
+<div class="floor" aria-hidden="true"></div>
+
+<div class="app">
+  <aside class="side">
+    <div class="brand">
+      <div class="cubewrap" aria-hidden="true"><div class="cube"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+      <div><h1>Nilai Informatika</h1><p>SMP IT Insan Mulia</p></div>
+    </div>
+    <nav class="nav" id="nav">
+      <a href="#/dashboard" data-r="dashboard"><b>◈</b>Dashboard</a>
+      <a href="#/nilai" data-r="nilai"><b>▦</b>Data Nilai</a>
+      <a href="#/input" data-r="input"><b>✚</b>Input Data</a>
+      <a href="#/pengaturan" data-r="pengaturan"><b>⚙</b>Pengaturan</a>
+    </nav>
+    <div class="foot">Panel guru Informatika.<br>Data tersimpan di peramban ini. Lakukan backup secara berkala di menu Pengaturan.</div>
+  </aside>
+  <main class="main" id="view"></main>
+</div>
+
+<div id="modal" hidden><div class="box"><p id="modalMsg"></p><div class="row" style="justify-content:flex-end"><button class="btn" id="modalNo">Batal</button><button class="btn pri" id="modalYes">Ya, lanjutkan</button></div></div></div>
+<div id="toast" role="status"></div>
+<input type="file" id="fileIn" accept=".json,application/json" hidden>
+
+<script>
+'use strict';
+/* ================= konstanta & data ================= */
+const F = ['CP1','CP2','CP3','CP4','TP1','TP2','TP3','TP4'];
+const ALL = [...F,'ASTS','ASAT'];
+const STORE = 'nilai-informatika-insan-mulia-v1';
+const PAL = ['#35e0ff','#8b5cff','#ff4fd8','#3dffa8','#ffc857','#ff7a45','#7aa2ff','#c4ff5c','#ff5470'];
+
+const $ = (s, r=document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => { if (v===null||v===undefined||v==='') return null; const n = Number(String(v).replace(',','.')); return isFinite(n) ? n : null; };
+const mean = a => { a = a.filter(x => x!==null && x!==undefined); return a.length ? a.reduce((x,y)=>x+y,0)/a.length : null; };
+const fmt = (v,d=1) => (v===null||v===undefined) ? '–' : String(Math.round(v*10**d)/10**d).replace('.',',');
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const level = c => { const m = String(c).match(/\d+/); return m ? +m[0] : null; };
+const natural = (a,b) => String(a).localeCompare(String(b), 'id', {numeric:true});
+
+function demoData(){
+  let seed = 20260; const rnd = () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed>>>15, 1|seed); t = t + Math.imul(t ^ t>>>7, 61|t) ^ t; return ((t ^ t>>>14)>>>0)/4294967296; };
+  const names = {
+    '7A':['Ahmad Fauzan','Aisyah Putri','Bilal Ramadhan','Citra Maharani','Daffa Alfarizi','Elsa Nurhaliza'],
+    '7B':['Farhan Hakim','Ghina Azzahra','Hafidz Maulana','Intan Permata','Jibril Anwar','Khansa Salsabila'],
+    '8A':['Lutfi Hidayat','Maryam Zahira','Naufal Rizky','Olivia Safitri','Putra Wijaya','Qonita Amalia'],
+    '8B':['Rafi Pratama','Syifa Aulia','Taufik Hidayah','Ulfa Khairunnisa','Vino Saputra','Wulan Ramadhani'],
+    '9A':['Yusuf Maulidi','Zahra Nabila','Alif Kurniawan','Balqis Rahmawati','Cahya Ananda','Fikri Ramadhan'],
+    '9B':['Dimas Prasetyo','Eka Fitriani','Fathir Ramdani','Gista Aprilia','Hanif Abdurrahman','Isna Mutmainah']
+  };
+  const students = [];
+  Object.entries(names).forEach(([cls,list]) => list.forEach(name => {
+    const ab = 60 + rnd()*36; const scores = {};
+    ALL.forEach((k,i) => { scores[k] = Math.round(Math.min(100, Math.max(42, ab + (rnd()-.5)*18 + i*0.5))); });
+    students.push({id:uid(), name, cls, scores});
+  }));
+  return {kkm:75, demo:true, students};
+}
+function load(){
+  try { const raw = localStorage.getItem(STORE); if (raw) { const d = JSON.parse(raw); if (d && Array.isArray(d.students)) return d; } } catch(e){}
+  return demoData();
+}
+let db = load();
+function save(){ try { localStorage.setItem(STORE, JSON.stringify(db)); } catch(e){ toast('Penyimpanan peramban penuh atau diblokir. Segera backup data Anda.'); } }
+save();
+
+/* ================= perhitungan ================= */
+function calc(s){
+  const sc = s.scores || {};
+  const avg = mean(F.map(k => num(sc[k])));
+  const asts = num(sc.ASTS), asat = num(sc.ASAT);
+  const fin = mean([avg, asts, asat]);
+  const below = ALL.filter(k => { const v = num(sc[k]); return v!==null && v < db.kkm; });
+  let st = 'empty';
+  if (fin !== null) st = fin < db.kkm ? 'bad' : (below.length >= 2 ? 'watch' : 'ok');
+  return {avg, asts, asat, fin, below, st};
+}
+const BADGE = {ok:['✔','Tuntas'], watch:['◐','Tuntas, dipantau'], bad:['▼','Remedial'], empty:['○','Belum ada nilai']};
+const badge = st => `<span class="badge ${st}"><b>${BADGE[st][0]}</b>${BADGE[st][1]}</span>`;
+const classes = () => [...new Set(db.students.map(s => s.cls))].sort(natural);
+const compAvg = (list,k) => mean(list.map(s => num(s.scores[k])));
+
+/* ================= UI helper ================= */
+let toastT;
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(()=>t.classList.remove('show'), 2600); }
+function ask(msg){ return new Promise(res => { const m = $('#modal'); $('#modalMsg').textContent = msg; m.hidden = false; $('#modalYes').focus();
+  const done = v => { m.hidden = true; $('#modalYes').onclick = $('#modalNo').onclick = null; res(v); };
+  $('#modalYes').onclick = () => done(true); $('#modalNo').onclick = () => done(false); }); }
+function download(name, text, type){ const b = new Blob([text], {type}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 1000); }
+
+/* ================= grafik ================= */
+function lineChart(series, labels, h=320){
+  const W=760, H=h, L=40, R=18, T=18, B=34;
+  const vals = series.flatMap(s => s.values).filter(v => v!==null);
+  const mn = Math.min(...(vals.length?vals:[60]), db.kkm);
+  const lo = Math.max(0, Math.floor((mn-6)/10)*10), hi = 100;
+  const X = i => L + i*(W-L-R)/(labels.length-1);
+  const Y = v => T + (1-(v-lo)/(hi-lo))*(H-T-B);
+  let g = '';
+  for (let v=lo; v<=hi; v+=10){ g += `<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="rgba(120,170,255,.13)"/><text x="${L-8}" y="${Y(v)+4}" fill="#8fa3d1" font-size="11" text-anchor="end">${v}</text>`; }
+  labels.forEach((l,i) => g += `<text x="${X(i)}" y="${H-10}" fill="#8fa3d1" font-size="11" text-anchor="middle">${l}</text>`);
+  g += `<line x1="${L}" x2="${W-R}" y1="${Y(db.kkm)}" y2="${Y(db.kkm)}" stroke="#ffc857" stroke-width="1.5" stroke-dasharray="6 5"/><text x="${W-R}" y="${Y(db.kkm)-6}" fill="#ffc857" font-size="11" font-weight="700" text-anchor="end">KKM ${db.kkm}</text>`;
+  let body = '';
+  series.forEach(s => {
+    let d = '', pen = false;
+    s.values.forEach((v,i) => { if (v===null){ pen = false; return; } d += `${pen?'L':'M'}${X(i).toFixed(1)} ${Y(v).toFixed(1)} `; pen = true; });
+    body += `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" filter="url(#glow)"/>`;
+    s.values.forEach((v,i) => { if (v!==null) body += `<circle cx="${X(i)}" cy="${Y(v)}" r="3.6" fill="#060a18" stroke="${s.color}" stroke-width="2"><title>${esc(s.name)} – ${labels[i]}: ${fmt(v)}</title></circle>`; });
+  });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik perkembangan nilai"><defs><filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>${g}${body}</svg>`;
+}
+const legend = series => `<div class="lg">${series.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('')}</div>`;
+function bars3d(items){
+  return `<div class="bplot" style="--k:${db.kkm}"><div class="kkmline" style="--k:${db.kkm}"><span>KKM ${db.kkm}</span></div>${items.map(i => `<div class="bcol"><div class="bval">${fmt(i.value)}</div><div class="bar ${i.value<db.kkm?'low':''}" style="--h:${Math.max(2,i.value)}"></div><div class="blabel">${esc(i.label)}<small>${i.n} siswa</small></div></div>`).join('')}</div>`;
+}
+
+/* ================= state & routing ================= */
+const state = {lvl:'all', mode:'level', cls:'all', q:'', sort:'name', edit:false, editId:null};
+function route(){ const h = location.hash.replace(/^#\/?/,'') || 'dashboard'; const [name, arg] = h.split('/'); return {name, arg}; }
+function render(){
+  const {name, arg} = route();
+  document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.r === (name==='siswa' ? 'nilai' : name)));
+  const v = $('#view');
+  const map = {dashboard:viewDashboard, nilai:viewNilai, input:viewInput, pengaturan:viewSettings, siswa:()=>viewProfile(arg)};
+  v.innerHTML = (map[name] || viewDashboard)();
+  if (name==='input') bindPreview();
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', render);
+const demoBanner = () => db.demo ? `<div class="banner"><span>Anda sedang melihat <b>data contoh</b>. Hapus dulu sebelum memasukkan data siswa yang sebenarnya.</span><button class="btn sm dan" data-act="wipe">Hapus data contoh</button></div>` : '';
+const head = (t,p,extra='') => `<div class="pagehead"><div><h2>${t}</h2><p>${p}</p></div><div class="row">${extra}</div></div>`;
+
+/* ================= DASHBOARD ================= */
+function viewDashboard(){
+  if (!db.students.length) return head('Dashboard','Ringkasan nilai Informatika') + `<div class="panel empty-state"><h3>Belum ada data siswa</h3><p>Tambahkan siswa dan nilainya untuk melihat grafik dan peringkat.</p><div class="row" style="justify-content:center"><a class="btn pri" href="#/input">Tambah siswa</a><button class="btn" data-act="demo">Muat data contoh</button></div></div>`;
+  const lv = state.lvl;
+  const list = db.students.filter(s => lv==='all' || level(s.cls)===+lv);
+  const rows = list.map(s => ({s, c:calc(s)})).filter(r => r.c.fin!==null);
+  const avgAll = mean(rows.map(r => r.c.fin));
+  const bad = rows.filter(r => r.c.st==='bad').sort((a,b)=>a.c.fin-b.c.fin);
+  const watch = rows.filter(r => r.c.st==='watch').sort((a,b)=>b.c.below.length-a.c.below.length || a.c.fin-b.c.fin);
+  const pass = rows.length - bad.length;
+  const top = [...rows].sort((a,b)=>b.c.fin-a.c.fin).slice(0,5);
+  const levels = [...new Set(db.students.map(s=>level(s.cls)).filter(Boolean))].sort((a,b)=>a-b);
+
+  // grafik perkembangan
+  let series;
+  if (state.mode==='level'){
+    series = levels.map((l,i) => { const g = db.students.filter(s=>level(s.cls)===l); return {name:'Kelas '+l, color:PAL[i%PAL.length], values:ALL.map(k=>compAvg(g,k))}; });
+  } else {
+    series = classes().map((c,i) => { const g = db.students.filter(s=>s.cls===c); return {name:c, color:PAL[i%PAL.length], values:ALL.map(k=>compAvg(g,k))}; });
+  }
+  // rata-rata per kelas
+  const cls = classes().map(c => { const g = db.students.filter(s=>s.cls===c); return {label:c, value:mean(g.map(s=>calc(s).fin)), n:g.length}; }).filter(x=>x.value!==null);
+  // komponen
+  const comp = ALL.map(k => ({k, v:compAvg(list,k)}));
+  const weakest = comp.filter(c=>c.v!==null).sort((a,b)=>a.v-b.v)[0];
+
+  return demoBanner() + head('Dashboard','Perkembangan nilai Informatika seluruh kelas',
+    `<select class="in" id="dashLevel" aria-label="Filter tingkat"><option value="all">Semua tingkat</option>${levels.map(l=>`<option value="${l}" ${String(lv)===String(l)?'selected':''}>Kelas ${l}</option>`).join('')}</select>`) + `
+  <div class="stats">
+    <div class="stat tilt" style="--c:var(--cyan)"><span>Jumlah siswa</span><strong>${list.length}</strong><small>${rows.length} sudah memiliki nilai</small></div>
+    <div class="stat tilt" style="--c:var(--violet)"><span>Rata-rata nilai akhir</span><strong>${fmt(avgAll)}</strong><small>KKM ${db.kkm}</small></div>
+    <div class="stat tilt" style="--c:var(--ok)"><span>Ketuntasan</span><strong>${rows.length?Math.round(pass/rows.length*100):0}%</strong><small>${pass} dari ${rows.length} siswa tuntas</small></div>
+    <div class="stat tilt" style="--c:var(--bad)"><span>Perlu bimbingan khusus</span><strong>${bad.length}</strong><small>${watch.length} siswa lain perlu dipantau</small></div>
+  </div>
+
+  <div class="stack">
+    <div class="panel chart"><div class="row" style="justify-content:space-between"><div><h3>Perkembangan nilai per kelas</h3><p class="sub">Rata-rata setiap komponen penilaian, dari CP1 sampai ASAT</p></div>
+      <div class="row"><button class="btn sm ${state.mode==='level'?'on':''}" data-act="mode" data-v="level">Per tingkat</button><button class="btn sm ${state.mode==='class'?'on':''}" data-act="mode" data-v="class">Per kelas</button></div></div>
+      ${lineChart(series, ALL)}${legend(series)}</div>
+
+    <div class="grid2">
+      <div class="panel"><h3>Rata-rata nilai akhir per kelas</h3><p class="sub">Batang merah berarti rata-rata kelas di bawah KKM</p>${bars3d(cls)}</div>
+      <div class="panel"><h3>Rata-rata per komponen</h3><p class="sub">${weakest ? `Komponen terlemah: <b>${weakest.k}</b> (${fmt(weakest.v)}). Garis kuning menandai KKM.` : 'Belum ada nilai.'}</p>
+        ${comp.map(c => `<div class="hrow"><span>${c.k}</span><div class="hbar" style="--k:${db.kkm}%"><i class="${c.v!==null&&c.v<db.kkm?'low':''}" style="width:${c.v||0}%"></i></div><b>${fmt(c.v)}</b></div>`).join('')}</div>
+    </div>
+
+    <div class="grid3">
+      <div class="panel"><h3>Nilai tertinggi</h3><p class="sub">Lima siswa dengan nilai akhir terbaik</p><div class="rank">${top.map((r,i)=>`<a class="ri" href="#/siswa/${r.s.id}"><span class="no">${i+1}</span><span><b>${esc(r.s.name)}</b><small>Kelas ${esc(r.s.cls)}</small></span><span class="sc">${fmt(r.c.fin)}</span></a>`).join('') || '<p class="help">Belum ada data.</p>'}</div></div>
+      <div class="panel"><h3>Perlu bimbingan khusus</h3><p class="sub">Nilai akhir di bawah KKM ${db.kkm}</p><div class="rank">${bad.slice(0,6).map(r=>`<a class="ri alert" href="#/siswa/${r.s.id}"><span class="no">▼</span><span><b>${esc(r.s.name)}</b><small>Kelas ${esc(r.s.cls)}</small><br>${r.c.below.map(k=>`<span class="chip">${k} ${fmt(num(r.s.scores[k]),0)}</span>`).join('')}</span><span class="sc">${fmt(r.c.fin)}</span></a>`).join('') || '<p class="help">Tidak ada siswa di bawah KKM.</p>'}${bad.length>6?`<p class="help">dan ${bad.length-6} siswa lainnya. Lihat di menu Data Nilai.</p>`:''}</div></div>
+      <div class="panel"><h3>Perlu dipantau</h3><p class="sub">Nilai akhir tuntas, tetapi dua komponen atau lebih di bawah KKM</p><div class="rank">${watch.slice(0,6).map(r=>`<a class="ri" href="#/siswa/${r.s.id}"><span class="no" style="color:var(--warn)">◐</span><span><b>${esc(r.s.name)}</b><small>Kelas ${esc(r.s.cls)}</small><br>${r.c.below.map(k=>`<span class="chip">${k} ${fmt(num(r.s.scores[k]),0)}</span>`).join('')}</span><span class="sc" style="color:var(--warn)">${fmt(r.c.fin)}</span></a>`).join('') || '<p class="help">Tidak ada siswa yang perlu dipantau.</p>'}</div></div>
+    </div>
+  </div>`;
+}
+
+/* ================= DATA NILAI ================= */
+function sortedRows(){
+  let rows = db.students.filter(s => (state.cls==='all' || s.cls===state.cls) && s.name.toLowerCase().includes(state.q.toLowerCase())).map(s => ({s, c:calc(s)}));
+  const by = {
+    name:(a,b)=>natural(a.s.name,b.s.name), cls:(a,b)=>natural(a.s.cls,b.s.cls)||natural(a.s.name,b.s.name),
+    hi:(a,b)=>(b.c.fin??-1)-(a.c.fin??-1), lo:(a,b)=>(a.c.fin??999)-(b.c.fin??999)
+  }[state.sort];
+  return rows.sort(by);
+}
+const scoreCell = v => v===null ? `<td class="num empty">–</td>` : (v<db.kkm ? `<td class="num low">${fmt(v)}<sup>▼</sup></td>` : `<td class="num">${fmt(v)}</td>`);
+function rowHtml({s,c}){
+  const cell = k => { const v = num(s.scores[k]);
+    if (state.edit) return `<td class="num"><input class="cellin ${v!==null&&v<db.kkm?'low':''}" type="number" min="0" max="100" step="any" inputmode="decimal" data-id="${s.id}" data-k="${k}" value="${v??''}" aria-label="${k} ${esc(s.name)}"></td>`;
+    return scoreCell(v); };
+  return `<tr data-id="${s.id}"><td class="sticky l"><a class="namelink" href="#/siswa/${s.id}">${esc(s.name)}</a></td><td>${esc(s.cls)}</td>${F.map(cell).join('')}<td class="num strong ${c.avg!==null&&c.avg<db.kkm?'low':''}" data-c="avg">${fmt(c.avg)}</td>${cell('ASTS')}${cell('ASAT')}<td class="num fin ${c.fin===null?'':c.fin<db.kkm?'low':'good'}" data-c="fin">${fmt(c.fin)}</td><td data-c="st">${badge(c.st)}</td></tr>`;
+}
+function viewNilai(){
+  const rows = sortedRows();
+  const cl = classes();
+  return demoBanner() + head('Data Nilai','Klik nama siswa untuk membuka profil lengkap',
+    `<button class="btn ${state.edit?'on':''}" data-act="toggleEdit">${state.edit?'Selesai mengedit':'Edit cepat'}</button><a class="btn pri" href="#/input">+ Tambah siswa</a>`) + `
+  <div class="tools">
+    <input class="in" id="q" type="search" placeholder="Cari nama siswa" value="${esc(state.q)}" aria-label="Cari nama siswa">
+    <select class="in" id="fCls" aria-label="Filter kelas"><option value="all">Semua kelas</option>${cl.map(c=>`<option ${state.cls===c?'selected':''}>${esc(c)}</option>`).join('')}</select>
+    <select class="in" id="fSort" aria-label="Urutkan"><option value="name" ${state.sort==='name'?'selected':''}>Urut nama A–Z</option><option value="cls" ${state.sort==='cls'?'selected':''}>Urut kelas</option><option value="hi" ${state.sort==='hi'?'selected':''}>Nilai akhir tertinggi</option><option value="lo" ${state.sort==='lo'?'selected':''}>Nilai akhir terendah</option></select>
+    <span class="help">${rows.length} siswa</span>
+  </div>
+  ${rows.length ? `<div class="tablewrap"><table class="grid"><thead>
+    <tr><th rowspan="2" class="sticky l">Nama siswa</th><th rowspan="2">Kelas</th><th colspan="4">Capaian Pembelajaran</th><th colspan="4">Tujuan Pembelajaran</th><th rowspan="2">Rata-rata</th><th rowspan="2">ASTS</th><th rowspan="2">ASAT</th><th rowspan="2">Nilai Akhir</th><th rowspan="2">Keterangan</th></tr>
+    <tr>${F.map(k=>`<th>${k}</th>`).join('')}</tr></thead><tbody id="tbody">${rows.map(rowHtml).join('')}</tbody></table></div>`
+  : `<div class="panel empty-state"><h3>Tidak ada siswa yang cocok</h3><p>Ubah kata kunci atau filter kelas, atau tambahkan siswa baru.</p></div>`}
+  <div class="legend"><span>KKM <b>${db.kkm}</b></span><span style="color:var(--bad)">▼ Nilai di bawah KKM</span><span style="color:var(--ok)">✔ Tuntas</span><span style="color:var(--warn)">◐ Tuntas, tetapi ≥ 2 komponen di bawah KKM</span><span style="color:var(--bad)">▼ Remedial: nilai akhir di bawah KKM</span></div>
+  <p class="help">Rata-rata = rata-rata CP1–CP4 dan TP1–TP4. Nilai akhir = rata-rata dari (Rata-rata, ASTS, ASAT). Komponen yang kosong tidak dihitung.</p>`;
+}
+function refreshRow(tr){
+  const s = db.students.find(x => x.id===tr.dataset.id); if (!s) return; const c = calc(s);
+  const avg = tr.querySelector('[data-c=avg]'); avg.textContent = fmt(c.avg); avg.classList.toggle('low', c.avg!==null && c.avg<db.kkm);
+  const fin = tr.querySelector('[data-c=fin]'); fin.textContent = fmt(c.fin); fin.classList.remove('low','good'); if (c.fin!==null) fin.classList.add(c.fin<db.kkm?'low':'good');
+  tr.querySelector('[data-c=st]').innerHTML = badge(c.st);
+}
+
+/* ================= INPUT ================= */
+function viewInput(){
+  const s = state.editId ? db.students.find(x=>x.id===state.editId) : null;
+  const sc = s ? s.scores : {};
+  const nf = k => `<label class="f">${k}<input class="in sc-in" type="number" min="0" max="100" step="any" inputmode="decimal" name="${k}" value="${num(sc[k])??''}"></label>`;
+  return demoBanner() + head(s ? 'Edit data siswa' : 'Input Data','Masukkan nama, kelas, dan nilai Informatika. Nilai boleh dikosongkan dan dilengkapi nanti.') + `
+  <div class="stack">
+  <form class="panel" id="stuForm" autocomplete="off">
+    <h3>${s ? 'Ubah: '+esc(s.name) : 'Tambah satu siswa'}</h3><p class="sub">Isi nilai skala 0 sampai 100.</p>
+    <div class="fgrid two"><label class="f">Nama siswa<input class="in" name="name" required maxlength="80" value="${esc(s?.name||'')}" placeholder="Contoh: Ahmad Fauzan"></label>
+    <label class="f">Kelas<input class="in" name="cls" required maxlength="12" list="clsList" value="${esc(s?.cls||state.lastCls||'')}" placeholder="Contoh: 7A"><datalist id="clsList">${classes().map(c=>`<option value="${esc(c)}">`).join('')}</datalist></label></div>
+    <div class="grp">Capaian Pembelajaran</div><div class="fgrid">${['CP1','CP2','CP3','CP4'].map(nf).join('')}</div>
+    <div class="grp">Tujuan Pembelajaran</div><div class="fgrid">${['TP1','TP2','TP3','TP4'].map(nf).join('')}</div>
+    <div class="grp">Asesmen</div><div class="fgrid two">${['ASTS','ASAT'].map(nf).join('')}</div>
+    <div class="preview" id="pv"></div>
+    <div class="row" style="margin-top:18px"><button class="btn pri" type="submit">${s ? 'Simpan perubahan' : 'Simpan siswa'}</button>${s ? '<button class="btn" type="button" data-act="cancelEdit">Batal</button>' : '<button class="btn" type="reset" data-act="resetForm">Kosongkan form</button>'}</div>
+  </form>
+  ${s ? '' : `<form class="panel" id="bulkForm" autocomplete="off"><h3>Tambah banyak siswa sekaligus</h3><p class="sub">Tempel daftar nama dari absen, satu nama per baris. Nilainya bisa diisi lewat Edit cepat di menu Data Nilai.</p>
+    <div class="fgrid two"><label class="f">Kelas<input class="in" name="cls" required maxlength="12" list="clsList" placeholder="Contoh: 8B"></label></div>
+    <label class="f" style="margin-top:14px">Daftar nama<textarea class="in" name="names" rows="6" required placeholder="Satu nama per baris"></textarea></label>
+    <div class="row" style="margin-top:16px"><button class="btn pri" type="submit">Tambahkan daftar</button></div></form>`}
+  </div>`;
+}
+function readScores(form){ const o = {}; ALL.forEach(k => { const v = num(form.elements[k].value); o[k] = v===null ? null : Math.min(100, Math.max(0, v)); }); return o; }
+function bindPreview(){
+  const f = $('#stuForm'); if (!f) return;
+  const upd = () => { const c = calc({scores:readScores(f)}); $('#pv').innerHTML = `<span>Rata-rata <b>${fmt(c.avg)}</b></span><span>Nilai akhir <b>${fmt(c.fin)}</b></span>${badge(c.st)}${c.below.length?`<span>Di bawah KKM: ${c.below.map(k=>`<span class="chip">${k}</span>`).join('')}</span>`:''}`; };
+  f.addEventListener('input', upd); upd();
+}
+
+/* ================= PROFIL ================= */
+function viewProfile(id){
+  const s = db.students.find(x => x.id===id);
+  if (!s) return head('Siswa tidak ditemukan','Data mungkin sudah dihapus.') + `<a class="btn" href="#/nilai">Kembali ke Data Nilai</a>`;
+  const c = calc(s);
+  const mates = db.students.filter(x => x.cls===s.cls);
+  const ranked = mates.map(x => ({id:x.id, f:calc(x).fin})).filter(x=>x.f!==null).sort((a,b)=>b.f-a.f);
+  const rank = ranked.findIndex(x => x.id===s.id) + 1;
+  const classAvg = ALL.map(k => compAvg(mates,k));
+  const series = [{name:s.name, color:'#35e0ff', values:ALL.map(k=>num(s.scores[k]))},{name:'Rata-rata kelas '+s.cls, color:'#8b5cff', values:classAvg}];
+  const tile = (k, extra='') => { const v = num(s.scores[k]); const low = v!==null && v<db.kkm;
+    return `<div class="sc3 tilt ${low?'low':''} ${extra}"><span>${k}</span><strong>${fmt(v)}${low?' ▼':''}</strong><div class="hbar" style="--k:${db.kkm}%"><i class="${low?'low':''}" style="width:${v||0}%"></i></div></div>`; };
+  const finColor = c.fin===null ? 'var(--mute)' : c.fin<db.kkm ? 'var(--bad)' : 'var(--ok)';
+  return `<div class="row" style="margin-bottom:14px"><a class="btn sm" href="#/nilai">← Data Nilai</a></div>
+  <div class="stack">
+  <div class="panel phero">
+    <div class="orb" aria-hidden="true"><div class="ring"></div><div class="ring b"></div><div class="ring c"></div><div class="core">${esc(s.name.trim()[0]||'?').toUpperCase()}</div></div>
+    <div><h2>${esc(s.name)}</h2><div class="meta"><span>Kelas <b style="color:var(--text)">${esc(s.cls)}</b></span>${badge(c.st)}${rank?`<span>Peringkat ${rank} dari ${ranked.length} di kelas ${esc(s.cls)}</span>`:''}</div>
+      <div class="row" style="margin-top:16px"><button class="btn sm" data-act="editStudent" data-id="${s.id}">Edit data</button><button class="btn sm dan" data-act="delStudent" data-id="${s.id}">Hapus siswa</button></div></div>
+    <div class="bigfin"><strong style="color:${finColor}">${fmt(c.fin)}</strong><span>Nilai akhir (KKM ${db.kkm})</span></div>
+  </div>
+  <div class="panel"><h3>Nilai keseluruhan</h3><p class="sub">Kotak merah bertanda ▼ berarti di bawah KKM</p>
+    <div class="scgrid">${F.map(k=>tile(k)).join('')}${tile('ASTS','sp')}${tile('ASAT','sp')}</div>
+    <div class="scgrid" style="margin-top:14px;grid-template-columns:repeat(3,minmax(0,1fr))">
+      <div class="sc3 tilt"><span>Rata-rata CP dan TP</span><strong style="color:${c.avg!==null&&c.avg<db.kkm?'var(--bad)':'var(--cyan)'}">${fmt(c.avg)}</strong></div>
+      <div class="sc3 tilt"><span>Rata-rata kelas ${esc(s.cls)}</span><strong>${fmt(mean(mates.map(x=>calc(x).fin)))}</strong></div>
+      <div class="sc3 tilt"><span>Komponen di bawah KKM</span><strong>${c.below.length}</strong></div></div>
+    ${c.st==='empty' ? '<div class="note">Belum ada nilai yang diisi untuk siswa ini.</div>' : c.below.length ? `<div class="note warn"><b>Perlu perhatian:</b> ${c.below.map(k=>`<span class="chip">${k} ${fmt(num(s.scores[k]))}</span>`).join('')} belum mencapai KKM ${db.kkm}. ${c.st==='bad'?'Nilai akhir juga di bawah KKM, sehingga dianjurkan remedial.':'Nilai akhir sudah tuntas, namun komponen tersebut perlu dipantau.'}</div>` : `<div class="note good"><b>Bagus:</b> semua komponen sudah mencapai KKM.</div>`}
+  </div>
+  <div class="panel chart"><h3>Perkembangan nilai</h3><p class="sub">Dibandingkan dengan rata-rata kelasnya</p>${lineChart(series, ALL, 300)}${legend(series)}</div>
+  </div>`;
+}
+
+/* ================= PENGATURAN ================= */
+function viewSettings(){
+  return demoBanner() + head('Pengaturan','KKM, backup, dan pengelolaan data') + `<div class="stack">
+  <div class="panel"><h3>Batas KKM</h3><p class="sub">Dipakai untuk tanda ▼, status tuntas, dan daftar bimbingan.</p>
+    <div class="row"><input class="in" id="kkmIn" type="number" min="0" max="100" value="${db.kkm}" style="width:120px" aria-label="KKM"><button class="btn pri" data-act="saveKkm">Simpan KKM</button></div></div>
+  <div class="panel"><h3>Backup dan ekspor</h3><p class="sub">Data hanya tersimpan di peramban ini. Unduh backup secara berkala, terutama sebelum membersihkan riwayat peramban.</p>
+    <div class="row"><button class="btn pri" data-act="exportJson">Unduh backup (JSON)</button><button class="btn" data-act="exportCsv">Ekspor ke Excel (CSV)</button><button class="btn" data-act="importJson">Pulihkan dari backup</button></div></div>
+  <div class="panel"><h3>Kelola data</h3><p class="sub">Total ${db.students.length} siswa di ${classes().length} kelas.</p>
+    <div class="row"><button class="btn" data-act="demo">Muat data contoh</button><button class="btn dan" data-act="wipe">Hapus semua data</button></div></div>
+  </div>`;
+}
+
+/* ================= event ================= */
+document.addEventListener('click', async e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const a = el.dataset.act, id = el.dataset.id;
+  if (a==='mode'){ state.mode = el.dataset.v; render(); }
+  else if (a==='toggleEdit'){ state.edit = !state.edit; render(); }
+  else if (a==='editStudent'){ state.editId = id; location.hash = '#/input'; }
+  else if (a==='cancelEdit'){ const i = state.editId; state.editId = null; location.hash = '#/siswa/'+i; }
+  else if (a==='delStudent'){ const s = db.students.find(x=>x.id===id); if (await ask(`Hapus data ${s.name}? Tindakan ini tidak bisa dibatalkan.`)){ db.students = db.students.filter(x=>x.id!==id); save(); toast('Siswa dihapus'); location.hash = '#/nilai'; } }
+  else if (a==='demo'){ if (!db.students.length || await ask('Data saat ini akan diganti dengan data contoh. Lanjutkan?')){ db = demoData(); save(); toast('Data contoh dimuat'); render(); } }
+  else if (a==='wipe'){ if (await ask('Semua data siswa dan nilai akan dihapus. Lanjutkan?')){ db = {kkm:db.kkm, demo:false, students:[]}; save(); toast('Semua data dihapus'); location.hash = '#/input'; render(); } }
+  else if (a==='saveKkm'){ const v = num($('#kkmIn').value); if (v===null||v<0||v>100) return toast('KKM harus antara 0 dan 100'); db.kkm = v; save(); toast('KKM disimpan: '+v); }
+  else if (a==='exportJson'){ download('backup-nilai-informatika-'+new Date().toISOString().slice(0,10)+'.json', JSON.stringify(db,null,2), 'application/json'); toast('Backup diunduh'); }
+  else if (a==='exportCsv'){
+    const q = v => '"'+String(v).replace(/"/g,'""')+'"';
+    const lines = ['sep=;', ['Nama','Kelas',...F,'Rata-rata','ASTS','ASAT','Nilai Akhir','Keterangan'].map(q).join(';')];
+    [...db.students].sort((a,b)=>natural(a.cls,b.cls)||natural(a.name,b.name)).forEach(s => { const c = calc(s);
+      lines.push([q(s.name),q(s.cls),...F.map(k=>fmt(num(s.scores[k]),2).replace('–','')),fmt(c.avg,2).replace('–',''),fmt(c.asts,2).replace('–',''),fmt(c.asat,2).replace('–',''),fmt(c.fin,2).replace('–',''),q(BADGE[c.st][1])].join(';')); });
+    download('nilai-informatika-'+new Date().toISOString().slice(0,10)+'.csv', '\ufeff'+lines.join('\r\n'), 'text/csv;charset=utf-8'); toast('File CSV diunduh');
+  }
+  else if (a==='importJson'){ $('#fileIn').click(); }
+});
+document.addEventListener('change', e => {
+  const t = e.target;
+  if (t.id==='dashLevel'){ state.lvl = t.value; render(); }
+  else if (t.id==='fCls'){ state.cls = t.value; render(); }
+  else if (t.id==='fSort'){ state.sort = t.value; render(); }
+  else if (t.classList.contains('cellin')){
+    const s = db.students.find(x=>x.id===t.dataset.id); if (!s) return;
+    let v = num(t.value); if (v!==null) v = Math.min(100, Math.max(0, v)); t.value = v ?? '';
+    s.scores[t.dataset.k] = v; db.demo = db.demo; save(); t.classList.toggle('low', v!==null && v<db.kkm); refreshRow(t.closest('tr'));
+  }
+  else if (t.id==='fileIn'){
+    const f = t.files[0]; if (!f) return; const r = new FileReader();
+    r.onload = async () => { try { const d = JSON.parse(r.result);
+        if (!d || !Array.isArray(d.students)) throw new Error('format');
+        if (await ask(`Pulihkan ${d.students.length} siswa dari backup? Data saat ini akan diganti.`)){ db = {kkm:num(d.kkm)??75, demo:false, students:d.students.map(s=>({id:s.id||uid(), name:String(s.name||''), cls:String(s.cls||''), scores:s.scores||{}}))}; save(); toast('Backup dipulihkan'); render(); }
+      } catch(err){ toast('File backup tidak valid'); } t.value = ''; };
+    r.readAsText(f);
+  }
+});
+document.addEventListener('input', e => {
+  if (e.target.id==='q'){ state.q = e.target.value; const pos = e.target.selectionStart; render(); const q = $('#q'); q.focus(); q.setSelectionRange(pos,pos); }
+});
+document.addEventListener('submit', async e => {
+  e.preventDefault(); const f = e.target;
+  if (f.id==='stuForm'){
+    const name = f.elements.name.value.trim(), cls = f.elements.cls.value.trim().toUpperCase();
+    if (!name || !cls) return toast('Nama dan kelas wajib diisi');
+    const scores = readScores(f);
+    if (state.editId){ const s = db.students.find(x=>x.id===state.editId); Object.assign(s,{name,cls,scores}); save(); toast('Perubahan disimpan'); const i = state.editId; state.editId = null; location.hash = '#/siswa/'+i; return; }
+    if (db.students.some(s => s.cls===cls && s.name.toLowerCase()===name.toLowerCase()) && !(await ask(`${name} sudah ada di kelas ${cls}. Tetap tambahkan?`))) return;
+    db.students.push({id:uid(), name, cls, scores}); state.lastCls = cls; save(); toast(`${name} disimpan`); render(); $('#stuForm').elements.name.focus();
+  } else if (f.id==='bulkForm'){
+    const cls = f.elements.cls.value.trim().toUpperCase(); const seen = new Set(db.students.filter(s=>s.cls===cls).map(s=>s.name.toLowerCase())); let n = 0;
+    f.elements.names.value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).forEach(name => { if (seen.has(name.toLowerCase())) return; seen.add(name.toLowerCase()); db.students.push({id:uid(), name, cls, scores:{}}); n++; });
+    save(); state.lastCls = cls; toast(n+' siswa ditambahkan ke kelas '+cls); if (n){ state.cls = cls; location.hash = '#/nilai'; }
+  }
+});
+document.addEventListener('reset', () => setTimeout(()=>{ const f = $('#stuForm'); if (f) f.dispatchEvent(new Event('input')); }));
+document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('#modal').hidden) $('#modalNo').click(); });
+
+/* efek miring 3D pada kartu */
+document.addEventListener('pointermove', e => {
+  if (e.pointerType!=='mouse' || matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const el = e.target.closest && e.target.closest('.tilt');
+  document.querySelectorAll('.tilt.hot').forEach(x => { if (x!==el){ x.classList.remove('hot'); x.style.transform=''; } });
+  if (!el) return;
+  const r = el.getBoundingClientRect(), px = (e.clientX-r.left)/r.width-.5, py = (e.clientY-r.top)/r.height-.5;
+  el.classList.add('hot'); el.style.transform = `perspective(900px) rotateX(${(-py*12).toFixed(2)}deg) rotateY(${(px*14).toFixed(2)}deg) translateZ(8px)`;
+});
+
+/* latar ruang 3D (titik berputar dengan perspektif) */
+(function(){
+  const cv = $('#space'), cx = cv.getContext('2d'); let W, H, pts = [], mx = 0, my = 0, ang = 0;
+  const still = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  function size(){ const d = Math.min(devicePixelRatio||1, 2); W = cv.width = innerWidth*d; H = cv.height = innerHeight*d; cx.setTransform(1,0,0,1,0,0); cx.scale(d,d); W = innerWidth; H = innerHeight; }
+  size(); addEventListener('resize', size);
+  for (let i=0;i<170;i++) pts.push({x:(Math.random()-.5)*2200, y:(Math.random()-.5)*1400, z:Math.random()*1800-900, c:Math.random()});
+  addEventListener('pointermove', e => { mx = e.clientX/innerWidth-.5; my = e.clientY/innerHeight-.5; });
+  function frame(){
+    cx.clearRect(0,0,W,H); ang += .0016; const ca = Math.cos(ang), sa = Math.sin(ang);
+    pts.forEach(p => {
+      const x = p.x*ca - p.z*sa, z = p.x*sa + p.z*ca + 1100 + my*140, s = 700/z; if (z<=60) return;
+      const sx = W/2 + x*s + mx*40, sy = H/2 + p.y*s, a = Math.min(1, s*.9)*.8;
+      cx.beginPath(); cx.arc(sx, sy, Math.max(.4, s*1.8), 0, 6.283);
+      cx.fillStyle = p.c>.66 ? `rgba(139,92,255,${a})` : p.c>.33 ? `rgba(53,224,255,${a})` : `rgba(255,255,255,${a*.7})`; cx.fill();
+    });
+    if (!still) requestAnimationFrame(frame);
+  }
+  frame();
+})();
+
+render();
+</script>
+</body>
+</html>
